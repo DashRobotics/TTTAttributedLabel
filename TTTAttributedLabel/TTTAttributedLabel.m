@@ -767,14 +767,20 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
 }
 
 - (CGRect)boundingRectForCharacterRange:(NSRange)range {
-    NSMutableAttributedString *mutableAttributedString = [self.attributedText mutableCopy];
+//    NSMutableAttributedString *mutableAttributedString = [self.attributedText mutableCopy];
 
-    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:mutableAttributedString];
+    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:self.attributedText];
 
     NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
     [textStorage addLayoutManager:layoutManager];
 
-    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:self.bounds.size];
+    CGSize textSize = self.bounds.size;
+    if (textSize.height - self.textInsets.bottom - self.textInsets.top >= self.font.lineHeight) {
+        // for a single line of text, the width may be a bit off and boundingRectForGlyphRange:inTextContainer: will wrap it
+        // to compensate, add a bit to the width (ADAM)
+        textSize = CGSizeMake(textSize.width + 1, textSize.height);
+    }
+    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:textSize];
     [layoutManager addTextContainer:textContainer];
 
     NSRange glyphRange;
