@@ -1450,7 +1450,7 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
           withEvent:(UIEvent *)event
 {
     if (![self linkAtPoint:point] || !self.userInteractionEnabled || self.hidden || self.alpha < 0.01) {
-        return [super hitTest:point withEvent:event];
+        return nil;//[super hitTest:point withEvent:event]; // ADAM HACK
     }
 
     return self;
