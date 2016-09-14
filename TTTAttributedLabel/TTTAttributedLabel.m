@@ -1513,8 +1513,8 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
 
         switch (result.resultType) {
             case NSTextCheckingTypeLink:
-                if ([self.delegate respondsToSelector:@selector(attributedLabel:didSelectLinkWithURL:)]) {
-                    [self.delegate attributedLabel:self didSelectLinkWithURL:result.URL];
+                if ([self.delegate respondsToSelector:@selector(attributedLabel:didSelectLinkWithURL:atRange:)]) {
+                    [self.delegate attributedLabel:self didSelectLinkWithURL:result.URL atRange:result.range]; // ADAM
                     return;
                 }
                 break;

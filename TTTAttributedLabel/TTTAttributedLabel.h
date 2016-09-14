@@ -431,6 +431,10 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
  */
 - (TTTAttributedLabelLink *)linkAtPoint:(CGPoint)point;
 
+
+//ADAM exposed this method
+- (CGRect)boundingRectForCharacterRange:(NSRange)range;
+
 @end
 
 /**
@@ -451,6 +455,8 @@ afterInheritingLabelAttributesAndConfiguringWithBlock:(NSMutableAttributedString
  */
 - (void)attributedLabel:(TTTAttributedLabel *)label
    didSelectLinkWithURL:(NSURL *)url;
+- (void)attributedLabel:(TTTAttributedLabel *)label
+   didSelectLinkWithURL:(NSURL *)url atRange:(NSRange)range; //ADAM
 
 /**
  Tells the delegate that the user did select a link to an address.
