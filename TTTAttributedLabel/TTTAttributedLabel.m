@@ -966,10 +966,16 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
                 if (CGRectGetWidth(runBounds) > width) {
                     runBounds.size.width = width;
                 }
+                runBounds = CGRectIntegral(runBounds); // ADAM
 
-                CGPathRef path = [[UIBezierPath bezierPathWithRoundedRect:CGRectInset(UIEdgeInsetsInsetRect(runBounds, self.linkBackgroundEdgeInset), lineWidth, lineWidth) cornerRadius:cornerRadius] CGPath];
+                CGPathRef path = [[UIBezierPath bezierPathWithRoundedRect:CGRectInset(UIEdgeInsetsInsetRect(runBounds, self.linkBackgroundEdgeInset), lineWidth/2.0, lineWidth/2.0) cornerRadius:cornerRadius] CGPath];
 
-                CGContextSetLineJoin(c, kCGLineJoinRound);
+                if (cornerRadius) { // ADAM
+                    CGContextSetLineJoin(c, kCGLineJoinRound);
+                } else {
+                    path = [UIBezierPath bezierPathWithRect:CGRectInset(UIEdgeInsetsInsetRect(runBounds, self.linkBackgroundEdgeInset), lineWidth/2.0, lineWidth/2.0)].CGPath;
+                    CGContextSetLineJoin(c, kCGLineJoinMiter);
+                }
 
                 if (fillColor) {
                     CGContextSetFillColorWithColor(c, fillColor);
@@ -978,9 +984,11 @@ static inline CGSize CTFramesetterSuggestFrameSizeForAttributedStringWithConstra
                 }
 
                 if (strokeColor) {
-                    CGContextSetStrokeColorWithColor(c, strokeColor);
+                    CGRect rect = UIEdgeInsetsInsetRect(runBounds, self.linkBackgroundEdgeInset); // ADAM: force underline
+                    path = [UIBezierPath bezierPathWithRect:CGRectMake(CGRectGetMinX(rect), CGRectGetMinY(rect)+lineWidth, CGRectGetWidth(rect), lineWidth)].CGPath;
+                    CGContextSetFillColorWithColor(c, strokeColor);
                     CGContextAddPath(c, path);
-                    CGContextStrokePath(c);
+                    CGContextFillPath(c); // ADAM
                 }
             }
         }
